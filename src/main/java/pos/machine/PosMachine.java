@@ -17,4 +17,8 @@ public class PosMachine {
         return (int) barcodes.stream().filter(code -> code.equals(barcode)).count();
     }
 
+    private int getSubtotal(Item item, int quantity) {
+        return item.getPrice() * quantity;
+    }
+
 }
