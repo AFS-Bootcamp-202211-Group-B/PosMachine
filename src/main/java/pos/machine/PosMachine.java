@@ -7,6 +7,14 @@ public class PosMachine {
     public String printReceipt(List<String> barcodes) {
         return null;
     }
+    public int getItemPrice(int barcode, Item[] allItems){
+        for (Item item:allItems){
+            if(item.getBarcode().equals(barcode)){
+                return item.getPrice();
+            }
+        }
+        return 0;
+    }
     public int calculateSubTotalItemPrice(List<BarcodeAmount> barcodeAmount, String barcode, Item[] allItems){
         return 0;
     }
