@@ -23,13 +23,10 @@ public class PosMachine {
         }
         return null;
     }
-    public int calculateSubTotalItemPrice(List<BarcodeAmount> barcodeAmounts, Item[] allItems){
-        for(BarcodeAmount barcodeAmount: barcodeAmounts){
-            int price = getItemPrice(barcodeAmount.getBarcode(),allItems);
-            int subTotal = price * barcodeAmount.getAmount();
-            return subTotal;
-        }
-        return 0;
+    public int calculateSubTotalItemPrice(BarcodeAmount barcodeAmount, Item[] allItems){
+        int price = getItemPrice(barcodeAmount.getBarcode(),allItems);
+        int subTotal = price * barcodeAmount.getAmount();
+        return subTotal;
     }
     public int calculateTotalPrice(List<BarcodeAmount> barcodeAmount, Item[] allItems){
         return 0;
