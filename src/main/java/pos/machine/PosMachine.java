@@ -1,7 +1,10 @@
 package pos.machine;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
@@ -26,6 +29,26 @@ public class PosMachine {
                 + ", Quantity: " + quanitity
                 + ", Unit price: " + item.getPrice()
                 + ", Subtotal: " + getSubtotal(item, quanitity) + " (yuan)";
+    }
+
+    private int calculateTotal(int[] subtotal) {
+        return IntStream.of(subtotal).sum();
+    }
+
+    private String formatReceipt(List<String> barcodes) {
+        List<String> uniqueBarcodes = barcodes.stream().distinct().collect(Collectors.toList());
+        String receipt = "***<store earning no money>Receipt ***\n";
+        int[] subtotal = new int[uniqueBarcodes.size()];
+        for (String barcode : uniqueBarcodes) {
+            Item item = getItem(barcode, ItemDataLoader.loadAllItems());
+            int quantity = getQuantity(barcodes, barcode);
+            receipt += generateLine(item, quantity);
+            subtotal[uniqueBarcodes.indexOf(barcode)] = getSubtotal(item, quantity);
+            receipt += "\n";
+        }
+        receipt += "----------------------";
+        receipt += "Total: " + calculateTotal(subtotal) + " (yuan)\n**********************";
+        return receipt;
     }
 
 }
