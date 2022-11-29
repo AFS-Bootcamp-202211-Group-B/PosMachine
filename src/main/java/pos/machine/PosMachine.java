@@ -12,4 +12,9 @@ public class PosMachine {
         return items.stream().filter(item -> item.getBarcode().equals(barcode)).findFirst().orElse(null);
 
     }
+
+    private int getQuantity(List<String> barcodes, String barcode) {
+        return (int) barcodes.stream().filter(code -> code.equals(barcode)).count();
+    }
+
 }
