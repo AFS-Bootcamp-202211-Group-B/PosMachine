@@ -1,5 +1,6 @@
 package pos.machine;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +13,7 @@ import pos.machine.ItemDataLoader;
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
         List<BarcodeGroup> barcodeCount = countProduct(barcodes);
-        List<ItemGroup> itemAggResult = aggregateAllProducts(barcodeCount);            
+        List<ItemGroup> itemAggResult = aggregateAllProducts(barcodeCount);    
         return formatReceipt(itemAggResult);
     }
 
@@ -25,7 +26,12 @@ public class PosMachine {
     }
     public List<ItemGroup> aggregateAllProducts(List<BarcodeGroup> barcodeGroups){
         List<Item> allItems = ItemDataLoader.loadAllItems();
-        return barcodeGroups.stream().map(barcodeGroup->aggregateProduct(barcodeGroup,allItems))
+        return barcodeGroups.stream()
+            .map(barcodeGroup->aggregateProduct(barcodeGroup,allItems))
+            .sorted(
+                Comparator.comparing(ItemGroup::getSubTotal).reversed()
+                .thenComparing(Comparator.comparing(ItemGroup::getCount))
+            )
             .collect(Collectors.toList());
     }
 
@@ -42,22 +48,17 @@ public class PosMachine {
     }
 
     public String formatReceipt(List<ItemGroup> itemGroups){
-        String result="***<store earning no money>Receipt ***\n"+
-        itemGroups.stream()
-            .map(itemGroup -> String.format("Name: %s, Quantity %d, UnitPrice: %d (yuan), Subtotal: %d (yuan)", 
-                    itemGroup.getItem().getName(),
-                    itemGroup.getCount(),
-                    itemGroup.getItem().getPrice(),
-                    itemGroup.getSubTotal()))
-            .collect(Collectors.joining("\n"))+
-        // Name: Coca-Cola, Quantity: 5, Unit price: 3 (yuan), Subtotal: 15 (yuan)
-        // Name: Sprite, Quantity: 2, Unit price: 3 (yuan), Subtotal: 6 (yuan)
-        // Name: Battery, Quantity: 1, Unit price: 2 (yuan), Subtotal: 2 (yuan)
-        "\n----------------------\n"+
-        String.format("Total: %d (yuan)\n",sumCost(itemGroups))+        
-        "**********************\n";
-
-        return result;
+        return "***<store earning no money>Receipt***\n"+
+                itemGroups.stream()
+                    .map(itemGroup -> String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)", 
+                            itemGroup.getItem().getName(),
+                            itemGroup.getCount(),
+                            itemGroup.getItem().getPrice(),
+                            itemGroup.getSubTotal()))
+                    .collect(Collectors.joining("\n"))+
+                "\n----------------------\n"+
+                String.format("Total: %d (yuan)\n",sumCost(itemGroups))+        
+                "**********************";
     }
 
     public int sumCost(List<ItemGroup> itemGroups){
