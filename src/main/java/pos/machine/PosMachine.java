@@ -41,16 +41,16 @@ public class PosMachine {
     public String printReceiptLine(BarcodeAmount barcodeAmount, List<Item> allItems){
         String itemName = getItemName(barcodeAmount.getBarcode(),allItems);
         int unitPrice = getItemPrice(barcodeAmount.getBarcode(), allItems);
-        String resultLine = "Name: " + itemName + ", Quantity: " + barcodeAmount.getAmount() + ", Unit price: " + unitPrice + " (yuan), Subtotal: " + calculateSubTotalItemPrice(barcodeAmount,allItems);
+        String resultLine = "Name: " + itemName + ", Quantity: " + barcodeAmount.getAmount() + ", Unit price: " + unitPrice + " (yuan), Subtotal: " + calculateSubTotalItemPrice(barcodeAmount,allItems) + " (yuan)";
         return resultLine;
     }
     public String printResult(List<BarcodeAmount> barcodeAmounts, List<Item> allItems){
-        String receipt = "***<store earning no money>Receipt ***" + System.lineSeparator();
+        String receipt = "***<store earning no money>Receipt***\n";
         for(BarcodeAmount barcodeAmount: barcodeAmounts){
-            receipt += printReceiptLine(barcodeAmount,allItems) + System.lineSeparator();
+            receipt += printReceiptLine(barcodeAmount,allItems) + "\n";
         }
-        receipt += "----------------------" + System.lineSeparator() +
-                "Total: " + calculateTotalPrice(barcodeAmounts,allItems) + "(yuan)" + System.lineSeparator()
+        receipt += "----------------------\n" +
+                "Total: " + calculateTotalPrice(barcodeAmounts,allItems) + " (yuan)\n"
                 + "**********************";
 
         return receipt;
