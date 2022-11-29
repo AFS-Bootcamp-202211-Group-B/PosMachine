@@ -14,21 +14,25 @@ public class PosMachine {
         return null;
     }
 
-
     public List<ItemGroup> aggregateAllProducts(List<BarcodeGroup> barcodeGroups){
         List<Item> allItems = ItemDataLoader.loadAllItems();
         return barcodeGroups.stream().map(barcodeGroup->aggregateProduct(barcodeGroup,allItems))
             .collect(Collectors.toList());
     }
-    
+
     public ItemGroup aggregateProduct(BarcodeGroup barcodeGroup, List<Item> allItems){
         Item item = mapBarcodeToDetails(barcodeGroup.getBarcode(),allItems);
         ItemGroup itemGroup = new ItemGroup(item, barcodeGroup.getCount(), barcodeGroup.getCount()*item.getPrice());
         return itemGroup;
     }
+
     public Item mapBarcodeToDetails(String Barcode, List<Item> allItems){
         return allItems.stream()
                 .filter(item-> item.getBarcode().equals(Barcode))
-                .collect(Collectors.toList()).get(0);
+                .collect(Collectors.toList()).get(0);    
+    }
+
+    public int sumCost(List<ItemGroup> itemGroups){
+        return itemGroups.stream().map(itemGroup->itemGroup.getSubTotal()).reduce(0, Integer::sum);
     }
 }
