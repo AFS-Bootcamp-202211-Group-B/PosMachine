@@ -13,7 +13,7 @@ public class PosMachine {
     public String printReceipt(List<String> barcodes) {
         List<BarcodeGroup> barcodeCount = countProduct(barcodes);
         List<ItemGroup> itemAggResult = aggregateAllProducts(barcodeCount);            
-        return receipt(itemAggResult);
+        return formatReceipt(itemAggResult);
     }
 
     public List<BarcodeGroup> countProduct(List<String> barcodes){
@@ -41,7 +41,24 @@ public class PosMachine {
                 .collect(Collectors.toList()).get(0);    
     }
 
+    public String formatReceipt(List<ItemGroup> itemGroups){
+        String result="***<store earning no money>Receipt ***\n"+
+        itemGroups.stream()
+            .map(itemGroup -> String.format("Name: %s, Quantity %d, UnitPrice: %d (yuan), Subtotal: %d (yuan)", 
+                    itemGroup.getItem().getName(),
+                    itemGroup.getCount(),
+                    itemGroup.getItem().getPrice(),
+                    itemGroup.getSubTotal()))
+            .collect(Collectors.joining("\n"))+
+        // Name: Coca-Cola, Quantity: 5, Unit price: 3 (yuan), Subtotal: 15 (yuan)
+        // Name: Sprite, Quantity: 2, Unit price: 3 (yuan), Subtotal: 6 (yuan)
+        // Name: Battery, Quantity: 1, Unit price: 2 (yuan), Subtotal: 2 (yuan)
+        "\n----------------------\n"+
+        String.format("Total: %d (yuan)\n",sumCost(itemGroups))+        
+        "**********************\n";
 
+        return result;
+    }
 
     public int sumCost(List<ItemGroup> itemGroups){
         return itemGroups.stream().map(itemGroup->itemGroup.getSubTotal()).reduce(0, Integer::sum);
