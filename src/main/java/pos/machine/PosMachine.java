@@ -23,16 +23,21 @@ public class PosMachine {
         }
         return null;
     }
-    public int calculateSubTotalItemPrice(List<BarcodeAmount> barcodeAmount, String barcode, Item[] allItems){
+    public int calculateSubTotalItemPrice(List<BarcodeAmount> barcodeAmounts, Item[] allItems){
+        for(BarcodeAmount barcodeAmount: barcodeAmounts){
+            int price = getItemPrice(barcodeAmount.getBarcode(),allItems);
+            int subTotal = price * barcodeAmount.getAmount();
+            return subTotal;
+        }
         return 0;
     }
-    public int calculateTotalPrice(List<BarcodeAmount> barcodeAmount,List<String> barcodes, Item[] allItems){
+    public int calculateTotalPrice(List<BarcodeAmount> barcodeAmount, Item[] allItems){
         return 0;
     }
-    public String printReceiptLine(List<BarcodeAmount> barcodeAmount,String barcode, Item[] allItems){
+    public String printReceiptLine(List<BarcodeAmount> barcodeAmount, Item[] allItems){
         return null;
     }
-    public String printResult(List<BarcodeAmount> barcodeAmount,List<String> barcodes, Item[] allItems){
+    public String printResult(List<BarcodeAmount> barcodeAmount, Item[] allItems){
         return null;
     }
     public List<BarcodeAmount> countItemAmount(List<String>barcodes){
