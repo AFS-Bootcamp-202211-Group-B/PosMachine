@@ -11,27 +11,19 @@ public class PosMachine {
         Receipt receipt = calculateCost(receiptItems);
         return renderReceipt(receipt);
     }
-
     public List<ReceiptItem> decodeToItems(List<String> barcodes) {
         List<Item> items = ItemDataLoader.loadAllItems();
-
-        Map<String, Integer> barcodesQuantities = new TreeMap<>();
-        for(String barcode:barcodes){
-            if (barcodesQuantities.containsKey(barcode)){
-                barcodesQuantities.put(barcode, barcodesQuantities.get(barcode) + 1);
-            }
-            else{
-                barcodesQuantities.put(barcode, 1);
-            }
-        }
+        Map<String, Integer> barcodesQuantitiesMap = calculateQuantites(barcodes);
 
         List<ReceiptItem> receiptItems = new ArrayList<>();
-        for (Map.Entry<String, Integer> barcodesQuantity : barcodesQuantities.entrySet()) {
+        for (Map.Entry<String, Integer> barcodesQuantity : barcodesQuantitiesMap.entrySet()) {
             Item currentItem = items.stream()
                 .filter( item -> item.getBarcode().equals(barcodesQuantity.getKey()))
                 .findFirst()
                 .get();
+
             int quantity = barcodesQuantity.getValue();
+
             receiptItems.add(new ReceiptItem(
                 currentItem.getName(),
                 quantity,
@@ -40,6 +32,18 @@ public class PosMachine {
             ));
         }
         return receiptItems;
+    }
+    public Map<String, Integer> calculateQuantites(List<String> barcodes){
+        Map<String, Integer> barcodesQuantitiesMap = new TreeMap<>();
+        for(String barcode:barcodes){
+            if (barcodesQuantitiesMap.containsKey(barcode)){
+                barcodesQuantitiesMap.put(barcode, barcodesQuantitiesMap.get(barcode) + 1);
+            }
+            else{
+                barcodesQuantitiesMap.put(barcode, 1);
+            }
+        }
+        return barcodesQuantitiesMap;
     }
     public Receipt calculateCost(List<ReceiptItem> receiptItems){
         int totalPrice = receiptItems.stream()
@@ -60,7 +64,7 @@ public class PosMachine {
 
         return itemReceipt;
     }
-    public String generateReceipt(String itemsReceipt, int totalPrice){
+    public String generateReceipt(int totalPrice){
         return String.format("Total: %d (yuan)\n", totalPrice);
     }
     public String renderReceipt(Receipt receipt){
@@ -69,7 +73,7 @@ public class PosMachine {
             "***<store earning no money>Receipt***\n" +
             itemsReceipt +
             "----------------------\n" +
-            generateReceipt(itemsReceipt, receipt.getTotalPrice()) +
+            generateReceipt(receipt.getTotalPrice()) +
             "**********************";
     }
 }
