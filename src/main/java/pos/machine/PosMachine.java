@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
-        return null;
+        return formatReceipt(barcodes);
     }
 
     private Item getItem(String barcode, List<Item> items) {
@@ -27,7 +27,7 @@ public class PosMachine {
     private String generateLine(Item item, int quanitity) {
         return "Name: " + item.getName()
                 + ", Quantity: " + quanitity
-                + ", Unit price: " + item.getPrice()
+                + ", Unit price: " + item.getPrice() + " (yuan)"
                 + ", Subtotal: " + getSubtotal(item, quanitity) + " (yuan)";
     }
 
@@ -41,7 +41,7 @@ public class PosMachine {
 
     private String formatReceipt(List<String> barcodes) {
         List<String> uniqueBarcodes = getUniqueBarcodes(barcodes);
-        String receipt = "***<store earning no money>Receipt ***\n";
+        String receipt = "***<store earning no money>Receipt***\n";
         int[] subtotal = new int[uniqueBarcodes.size()];
         for (String barcode : uniqueBarcodes) {
             Item item = getItem(barcode, ItemDataLoader.loadAllItems());
@@ -50,7 +50,7 @@ public class PosMachine {
             subtotal[uniqueBarcodes.indexOf(barcode)] = getSubtotal(item, quantity);
             receipt += "\n";
         }
-        receipt += "----------------------";
+        receipt += "----------------------\n";
         receipt += "Total: " + calculateTotal(subtotal) + " (yuan)\n**********************";
         return receipt;
     }
