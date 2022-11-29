@@ -5,7 +5,10 @@ import java.util.List;
 
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
-        return null;
+        List<Item> allItems = ItemDataLoader.loadAllItems();
+        List<BarcodeAmount> barcodeAmounts =  countItemAmount(barcodes);
+        String receipt = printResult(barcodeAmounts,allItems);
+        return receipt;
     }
     public int getItemPrice(String barcode, List<Item> allItems){
         for (Item item:allItems){
@@ -42,15 +45,15 @@ public class PosMachine {
         return resultLine;
     }
     public String printResult(List<BarcodeAmount> barcodeAmounts, List<Item> allItems){
-        String recipt = "***<store earning no money>Receipt ***" + System.lineSeparator();
+        String receipt = "***<store earning no money>Receipt ***" + System.lineSeparator();
         for(BarcodeAmount barcodeAmount: barcodeAmounts){
-            recipt += printReceiptLine(barcodeAmount,allItems) + System.lineSeparator();
+            receipt += printReceiptLine(barcodeAmount,allItems) + System.lineSeparator();
         }
-        recipt += "----------------------" + System.lineSeparator() +
+        receipt += "----------------------" + System.lineSeparator() +
                 "Total: " + calculateTotalPrice(barcodeAmounts,allItems) + "(yuan)" + System.lineSeparator()
                 + "**********************";
 
-        return recipt;
+        return receipt;
     }
     public List<BarcodeAmount> countItemAmount(List<String>barcodes){
         List<BarcodeAmount>barcodeAmounts = new ArrayList<BarcodeAmount>();
