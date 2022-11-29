@@ -58,4 +58,7 @@ public class PosMachine {
 
         return itemReceipt;
     }
+    public String generateReceipt(String itemsReceipt, int totalPrice){
+        return itemsReceipt + String.format("Total: %d (yuan)", totalPrice);
+    }
 }
