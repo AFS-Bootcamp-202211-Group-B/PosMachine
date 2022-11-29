@@ -40,7 +40,7 @@ public class PosMachine {
     }
 
     private String formatReceipt(List<String> barcodes) {
-        List<String> uniqueBarcodes = barcodes.stream().distinct().collect(Collectors.toList());
+        List<String> uniqueBarcodes = getUniqueBarcodes(barcodes);
         String receipt = "***<store earning no money>Receipt ***\n";
         int[] subtotal = new int[uniqueBarcodes.size()];
         for (String barcode : uniqueBarcodes) {
