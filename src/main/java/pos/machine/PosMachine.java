@@ -49,12 +49,12 @@ public class PosMachine {
         String itemReceipt = "";
         List<ReceiptItem> receiptItems = receipt.getReceiptItems();
         for(ReceiptItem receiptItem: receiptItems){
-            itemReceipt += String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)",
+            itemReceipt += String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n",
                 receiptItem.getName(),
                 receiptItem.getQuantity(),
                 receiptItem.getUnitPrice(),
-                receiptItem.getSubTotal())
-        };
+                receiptItem.getSubTotal());
+        }
 
         return itemReceipt;
     }
