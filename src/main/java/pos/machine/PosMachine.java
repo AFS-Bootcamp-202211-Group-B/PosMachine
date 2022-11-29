@@ -1,18 +1,21 @@
 package pos.machine;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
-        return null;
+        List<ReceiptItem> receiptItems = decodeToItems(barcodes);
+        Receipt receipt = calculateCost(receiptItems);
+        return renderReceipt(receipt);
     }
 
     public List<ReceiptItem> decodeToItems(List<String> barcodes) {
         List<Item> items = ItemDataLoader.loadAllItems();
-        Map<String, Integer> barcodesQuantities = new HashMap<>();
+
+        Map<String, Integer> barcodesQuantities = new TreeMap<>();
         for(String barcode:barcodes){
             if (barcodesQuantities.containsKey(barcode)){
                 barcodesQuantities.put(barcode, barcodesQuantities.get(barcode) + 1);
@@ -21,6 +24,7 @@ public class PosMachine {
                 barcodesQuantities.put(barcode, 1);
             }
         }
+
         List<ReceiptItem> receiptItems = new ArrayList<>();
         for (Map.Entry<String, Integer> barcodesQuantity : barcodesQuantities.entrySet()) {
             Item currentItem = items.stream()
@@ -57,10 +61,15 @@ public class PosMachine {
         return itemReceipt;
     }
     public String generateReceipt(String itemsReceipt, int totalPrice){
-        return itemsReceipt + String.format("Total: %d (yuan)", totalPrice);
+        return String.format("Total: %d (yuan)\n", totalPrice);
     }
     public String renderReceipt(Receipt receipt){
         String itemsReceipt = generateItemsReceipt(receipt);
-        return generateReceipt(itemsReceipt, receipt.getTotalPrice());
+        return
+            "***<store earning no money>Receipt***\n" +
+            itemsReceipt +
+            "----------------------\n" +
+            generateReceipt(itemsReceipt, receipt.getTotalPrice()) +
+            "**********************";
     }
 }
