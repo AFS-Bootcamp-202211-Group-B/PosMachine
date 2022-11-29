@@ -10,11 +10,17 @@ import pos.machine.ItemDataLoader;
 
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
-        List<Item> allItems = ItemDataLoader.loadAllItems();
+        
         return null;
     }
 
 
+    public List<ItemGroup> aggregateAllProducts(List<BarcodeGroup> barcodeGroups){
+        List<Item> allItems = ItemDataLoader.loadAllItems();
+        return barcodeGroups.stream().map(barcodeGroup->aggregateProduct(barcodeGroup,allItems))
+            .collect(Collectors.toList());
+    }
+    
     public ItemGroup aggregateProduct(BarcodeGroup barcodeGroup, List<Item> allItems){
         Item item = mapBarcodeToDetails(barcodeGroup.getBarcode(),allItems);
         ItemGroup itemGroup = new ItemGroup(item, barcodeGroup.getCount(), barcodeGroup.getCount()*item.getPrice());
