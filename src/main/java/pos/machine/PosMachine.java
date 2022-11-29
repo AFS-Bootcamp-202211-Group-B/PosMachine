@@ -44,4 +44,18 @@ public class PosMachine {
             .reduce( 0, Integer::sum);
         return new Receipt(receiptItems, totalPrice);
     }
+
+    public String generateItemsReceipt(Receipt receipt){
+        String itemReceipt = "";
+        List<ReceiptItem> receiptItems = receipt.getReceiptItems();
+        for(ReceiptItem receiptItem: receiptItems){
+            itemReceipt += String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)",
+                receiptItem.getName(),
+                receiptItem.getQuantity(),
+                receiptItem.getUnitPrice(),
+                receiptItem.getSubTotal())
+        };
+
+        return itemReceipt;
+    }
 }
