@@ -15,6 +15,11 @@ public class PosMachine {
     }
 
 
+    public ItemGroup aggregateProduct(BarcodeGroup barcodeGroup, List<Item> allItems){
+        Item item = mapBarcodeToDetails(barcodeGroup.getBarcode(),allItems);
+        ItemGroup itemGroup = new ItemGroup(item, barcodeGroup.getCount(), barcodeGroup.getCount()*item.getPrice());
+        return itemGroup;
+    }
     public Item mapBarcodeToDetails(String Barcode, List<Item> allItems){
         return allItems.stream()
                 .filter(item-> item.getBarcode().equals(Barcode))
