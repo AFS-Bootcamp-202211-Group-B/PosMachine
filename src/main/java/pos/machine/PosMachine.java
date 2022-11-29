@@ -35,8 +35,11 @@ public class PosMachine {
         }
         return totalPrice;
     }
-    public String printReceiptLine(List<BarcodeAmount> barcodeAmount, Item[] allItems){
-        return null;
+    public String printReceiptLine(BarcodeAmount barcodeAmount, Item[] allItems){
+        String itemName = getItemName(barcodeAmount.getBarcode(),allItems);
+        int unitPrice = getItemPrice(barcodeAmount.getBarcode(), allItems);
+        String resultLine = "Name: " + itemName + ", Quantity: " + barcodeAmount.getAmount() + ", Unit price: " + unitPrice + " (yuan), Subtotal: " + calculateSubTotalItemPrice(barcodeAmount,allItems);
+        return resultLine;
     }
     public String printResult(List<BarcodeAmount> barcodeAmount, Item[] allItems){
         return null;
