@@ -21,4 +21,11 @@ public class PosMachine {
         return item.getPrice() * quantity;
     }
 
+    private String generateLine(Item item, int quanitity) {
+        return "Name: " + item.getName()
+                + ", Quantity: " + quanitity
+                + ", Unit price: " + item.getPrice()
+                + ", Subtotal: " + getSubtotal(item, quanitity) + " (yuan)";
+    }
+
 }
